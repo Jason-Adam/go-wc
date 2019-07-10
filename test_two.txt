@@ -1,0 +1,11 @@
+this
+is
+the
+second
+test file
+for the 
+wc command
+line
+function
+I'm writing
+the end
