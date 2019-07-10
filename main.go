@@ -58,7 +58,9 @@ func main() {
 			fmt.Println(countCharsInFile(string(data)))
 		}
 
-		fmt.Println(countWordsInFile(string(data)), countLinesInFile(string(data)), countCharsInFile(string(data)))
+		if !*words && !*lines && !*chars {
+			fmt.Println(countWordsInFile(string(data)), countLinesInFile(string(data)), countCharsInFile(string(data)))
+		}
 
 	case 1:
 		data, err := ioutil.ReadFile(flag.Arg(0))
@@ -76,7 +78,9 @@ func main() {
 			fmt.Println(countCharsInFile(string(data)))
 		}
 
-		fmt.Println(countWordsInFile(string(data)), countLinesInFile(string(data)), countCharsInFile(string(data)))
+		if !*words && !*lines && !*chars {
+			fmt.Println(countWordsInFile(string(data)), countLinesInFile(string(data)), countCharsInFile(string(data)))
+		}
 
 	default:
 		fmt.Println("No input given")
