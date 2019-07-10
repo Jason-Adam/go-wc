@@ -1,54 +1,42 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 )
-
-// CountWords represents the file values
-type CountWords struct {
-	wordCount      int
-	lineCount      int
-	characterCount int
-}
 
 func countWordsInFile(s string) int {
 	words := strings.Fields(s)
 	return len(words)
 }
 
+func errorCheck(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
 func main() {
 
-	/*
-		var lines bool
-		var words bool
-		var chars bool
-		flag.BoolVar(&lines, "l", false, "")
-		flag.BoolVar(&words, "w", false, "")
-		flag.BoolVar(&chars, "c", false, "")
-		flag.Parse()
+	flag.Parse()
 
-		dir, err := os.Getwd()
-		if err != nil {
-			fmt.Println("Error retrieving directory", err)
-			return
-		}
-	*/
+	switch flag.NArg() {
+	case 0:
+		data, err := ioutil.ReadAll(os.Stdin)
+		errorCheck(err)
+		wc := countWordsInFile(string(data))
+		fmt.Println(wc)
+	case 1:
+		data, err := ioutil.ReadFile(flag.Arg(0))
+		errorCheck(err)
+		wc := countWordsInFile(string(data))
+		fmt.Println(wc)
+	default:
+		fmt.Println("No input given")
+		os.Exit(1)
 
-	data, err := ioutil.ReadFile("test.txt")
-	if err != nil {
-		fmt.Println("File reading error", err)
-		return
 	}
-
-	wc := countWordsInFile(string(data))
-
-	counts := CountWords{
-		wordCount:      wc,
-		lineCount:      1,
-		characterCount: 10,
-	}
-
-	fmt.Println(counts.wordCount, counts.lineCount, counts.characterCount)
 }
