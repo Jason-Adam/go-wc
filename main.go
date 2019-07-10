@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -13,14 +14,18 @@ func countWordsInFile(s string) int {
 	return len(words)
 }
 
-// Place holder until I can figure it out
-func countLinesInFile(s int) int {
-	return s
+func countLinesInFile(s string) int {
+	scanner := bufio.NewScanner(strings.NewReader(s))
+	scanner.Split(bufio.ScanLines)
+	count := 0
+	for scanner.Scan() {
+		count++
+	}
+	return count
 }
 
-// Place holder until I can figure it out
-func countCharsInFile(s int) int {
-	return s
+func countCharsInFile(s string) int {
+	return len(s)
 }
 
 func errorCheck(e error) {
@@ -29,17 +34,11 @@ func errorCheck(e error) {
 	}
 }
 
-func retrieveCounts(d string) []int {
-	s := make([]int, 3)
-	s[0] = countWordsInFile(d)
-	s[1] = countLinesInFile(10) // I hardcoded these two until I can figure out how to do them
-	s[2] = countCharsInFile(100)
-	return s
-}
-
 func main() {
 
-	words := flag.Bool("w", false, "") // Only added "w" for now until I figure out the other functions
+	words := flag.Bool("w", false, "")
+	lines := flag.Bool("l", false, "")
+	chars := flag.Bool("c", false, "")
 	flag.Parse()
 
 	switch flag.NArg() {
@@ -47,29 +46,40 @@ func main() {
 		data, err := ioutil.ReadAll(os.Stdin)
 		errorCheck(err)
 
-		fileCounts := retrieveCounts(string(data))
-
 		if *words {
-			fmt.Println(fileCounts[0])
-		} else {
-			fmt.Println(fileCounts)
+			fmt.Println(countWordsInFile(string(data)))
 		}
+
+		if *lines {
+			fmt.Println(countLinesInFile(string(data)))
+		}
+
+		if *chars {
+			fmt.Println(countCharsInFile(string(data)))
+		}
+
+		fmt.Println(countWordsInFile(string(data)), countLinesInFile(string(data)), countCharsInFile(string(data)))
 
 	case 1:
 		data, err := ioutil.ReadFile(flag.Arg(0))
 		errorCheck(err)
 
-		fileCounts := retrieveCounts(string(data))
-
 		if *words {
-			fmt.Println(fileCounts[0], flag.Arg(0))
-		} else {
-			fmt.Println(fileCounts, flag.Arg(0))
+			fmt.Println(countWordsInFile(string(data)))
 		}
+
+		if *lines {
+			fmt.Println(countLinesInFile(string(data)))
+		}
+
+		if *chars {
+			fmt.Println(countCharsInFile(string(data)))
+		}
+
+		fmt.Println(countWordsInFile(string(data)), countLinesInFile(string(data)), countCharsInFile(string(data)))
 
 	default:
 		fmt.Println("No input given")
 		os.Exit(1)
-
 	}
 }
