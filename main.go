@@ -13,10 +13,12 @@ func countWordsInFile(s string) int {
 	return len(words)
 }
 
+// Place holder until I can figure it out
 func countLinesInFile(s int) int {
 	return s
 }
 
+// Place holder until I can figure it out
 func countCharsInFile(s int) int {
 	return s
 }
@@ -30,16 +32,14 @@ func errorCheck(e error) {
 func retrieveCounts(d string) []int {
 	s := make([]int, 3)
 	s[0] = countWordsInFile(d)
-	s[1] = countLinesInFile(10)
+	s[1] = countLinesInFile(10) // I hardcoded these two until I can figure out how to do them
 	s[2] = countCharsInFile(100)
 	return s
 }
 
 func main() {
 
-	words := flag.Bool("w", false, "")
-	//lines := flag.Bool("l", false, "")
-	//characters := flag.Bool("c", false, "")
+	words := flag.Bool("w", false, "") // Only added "w" for now until I figure out the other functions
 	flag.Parse()
 
 	switch flag.NArg() {
