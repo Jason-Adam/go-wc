@@ -6,32 +6,32 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 )
 
-func countWordsInFile(s string) int {
+func countWordsInFile(s string) string {
 	words := strings.Fields(s)
-	return len(words)
+	l := len(words)
+	o := strconv.Itoa(l)
+	return o
 }
 
-func countLinesInFile(s string) int {
+func countLinesInFile(s string) string {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	scanner.Split(bufio.ScanLines)
 	count := 0
 	for scanner.Scan() {
 		count++
 	}
-	return count
+	o := strconv.Itoa(count)
+	return o
 }
 
-func countCharsInFile(s string) int {
-	return len(s)
-}
-
-func errorCheck(e error) {
-	if e != nil {
-		panic(e)
-	}
+func countCharsInFile(s string) string {
+	l := len(s)
+	o := strconv.Itoa(l)
+	return o
 }
 
 func main() {
@@ -41,49 +41,69 @@ func main() {
 	chars := flag.Bool("c", false, "")
 	flag.Parse()
 
-	switch flag.NArg() {
-	case 0:
-		data, err := ioutil.ReadAll(os.Stdin)
-		errorCheck(err)
-
-		if *words {
-			fmt.Println(countWordsInFile(string(data)))
+	if flag.NArg() == 0 {
+		file := os.Stdin
+		fi, err := file.Stat()
+		if err != nil {
+			fmt.Println("There was an error retrieving file description:", err)
 		}
 
-		if *lines {
-			fmt.Println(countLinesInFile(string(data)))
-		}
+		size := fi.Size()
+		if size > 0 {
+			data, err := ioutil.ReadAll(os.Stdin)
+			if err != nil {
+				fmt.Println("There was an error reading from stdin:", err)
+			}
 
-		if *chars {
-			fmt.Println(countCharsInFile(string(data)))
-		}
+			var printValues string
+			s := string(data)
 
-		if !*words && !*lines && !*chars {
-			fmt.Println(countWordsInFile(string(data)), countLinesInFile(string(data)), countCharsInFile(string(data)))
-		}
+			if *words {
+				printValues += (countWordsInFile(s) + " ")
+			}
 
-	case 1:
+			if *lines {
+				printValues += (countLinesInFile(s) + " ")
+			}
+
+			if *chars {
+				printValues += (countCharsInFile(s) + " ")
+			}
+
+			if !*words && !*lines && !*chars {
+				fmt.Println(countWordsInFile(s), countLinesInFile(s), countCharsInFile(s))
+			}
+
+			fmt.Println(printValues)
+
+		} else {
+			fmt.Println("Stdin is empty")
+		}
+	} else if flag.NArg() == 1 {
 		data, err := ioutil.ReadFile(flag.Arg(0))
-		errorCheck(err)
+		if err != nil {
+			fmt.Println("There was an error reading the file:", err)
+		}
+
+		var printValues string
+		s := string(data)
 
 		if *words {
-			fmt.Println(countWordsInFile(string(data)))
+			printValues += (countWordsInFile(s) + " ")
 		}
 
 		if *lines {
-			fmt.Println(countLinesInFile(string(data)))
+			printValues += (countLinesInFile(s) + " ")
 		}
 
 		if *chars {
-			fmt.Println(countCharsInFile(string(data)))
+			printValues += (countCharsInFile(s) + " ")
 		}
 
 		if !*words && !*lines && !*chars {
-			fmt.Println(countWordsInFile(string(data)), countLinesInFile(string(data)), countCharsInFile(string(data)))
+			fmt.Println(countWordsInFile(s), countLinesInFile(s), countCharsInFile(s))
 		}
 
-	default:
-		fmt.Println("No input given")
-		os.Exit(1)
+		fmt.Println(printValues)
 	}
 }
