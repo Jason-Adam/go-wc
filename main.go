@@ -10,6 +10,34 @@ import (
 	"strings"
 )
 
+type flags struct {
+	words bool
+	lines bool
+	chars bool
+}
+
+func (f *flags) wcString(s string) string {
+	var printValues string
+
+	if f.words {
+		printValues += (countWordsInFile(s) + " ")
+	}
+
+	if f.lines {
+		printValues += (countLinesInFile(s) + " ")
+	}
+
+	if f.chars {
+		printValues += (countCharsInFile(s) + " ")
+	}
+
+	if !f.words && !f.lines && !f.chars {
+		return countWordsInFile(s) + " " + countLinesInFile(s) + " " + countCharsInFile(s)
+	}
+
+	return printValues
+}
+
 func countWordsInFile(s string) string {
 	words := strings.Fields(s)
 	l := len(words)
@@ -35,11 +63,13 @@ func countCharsInFile(s string) string {
 }
 
 func main() {
-
-	words := flag.Bool("w", false, "")
-	lines := flag.Bool("l", false, "")
-	chars := flag.Bool("c", false, "")
+	var w, l, c bool
+	flag.BoolVar(&w, "w", false, "")
+	flag.BoolVar(&l, "l", false, "")
+	flag.BoolVar(&c, "c", false, "")
 	flag.Parse()
+
+	f := flags{words: w, lines: l, chars: c}
 
 	if flag.NArg() == 0 {
 		file := os.Stdin
@@ -55,55 +85,23 @@ func main() {
 				fmt.Println("There was an error reading from stdin:", err)
 			}
 
-			var printValues string
 			s := string(data)
+			fmt.Println(f.wcString(s))
+			return
 
-			if *words {
-				printValues += (countWordsInFile(s) + " ")
-			}
-
-			if *lines {
-				printValues += (countLinesInFile(s) + " ")
-			}
-
-			if *chars {
-				printValues += (countCharsInFile(s) + " ")
-			}
-
-			if !*words && !*lines && !*chars {
-				fmt.Println(countWordsInFile(s), countLinesInFile(s), countCharsInFile(s))
-			}
-
-			fmt.Println(printValues)
-
-		} else {
-			fmt.Println("Stdin is empty")
 		}
+		fmt.Println("Stdin is empty")
+		return
 	} else if flag.NArg() == 1 {
 		data, err := ioutil.ReadFile(flag.Arg(0))
 		if err != nil {
 			fmt.Println("There was an error reading the file:", err)
 		}
 
-		var printValues string
 		s := string(data)
-
-		if *words {
-			printValues += (countWordsInFile(s) + " ")
-		}
-
-		if *lines {
-			printValues += (countLinesInFile(s) + " ")
-		}
-
-		if *chars {
-			printValues += (countCharsInFile(s) + " ")
-		}
-
-		if !*words && !*lines && !*chars {
-			fmt.Println(countWordsInFile(s), countLinesInFile(s), countCharsInFile(s))
-		}
-
-		fmt.Println(printValues)
+		fmt.Println(f.wcString(s))
+		return
 	}
+	fmt.Println("Too many inputs")
+	return
 }
