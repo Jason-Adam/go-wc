@@ -20,32 +20,32 @@ func (f *flags) wcString(s string) string {
 	var printValues string
 
 	if f.words {
-		printValues += (countWordsInFile(s) + " ")
+		printValues += (wordsInFile(s) + " ")
 	}
 
 	if f.lines {
-		printValues += (countLinesInFile(s) + " ")
+		printValues += (linesInFile(s) + " ")
 	}
 
 	if f.chars {
-		printValues += (countCharsInFile(s) + " ")
+		printValues += (charsInFile(s) + " ")
 	}
 
 	if !f.words && !f.lines && !f.chars {
-		return countWordsInFile(s) + " " + countLinesInFile(s) + " " + countCharsInFile(s)
+		return wordsInFile(s) + " " + linesInFile(s) + " " + charsInFile(s)
 	}
 
 	return printValues
 }
 
-func countWordsInFile(s string) string {
+func wordsInFile(s string) string {
 	words := strings.Fields(s)
 	l := len(words)
 	o := strconv.Itoa(l)
 	return o
 }
 
-func countLinesInFile(s string) string {
+func linesInFile(s string) string {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	scanner.Split(bufio.ScanLines)
 	count := 0
@@ -56,7 +56,7 @@ func countLinesInFile(s string) string {
 	return o
 }
 
-func countCharsInFile(s string) string {
+func charsInFile(s string) string {
 	l := len(s)
 	o := strconv.Itoa(l)
 	return o
