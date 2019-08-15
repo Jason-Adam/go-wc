@@ -38,8 +38,7 @@ func (f *flags) wcString(s string) string {
 func wordsInFile(s string) string {
 	words := strings.Fields(s)
 	l := len(words)
-	o := strconv.Itoa(l)
-	return o
+	return strconv.Itoa(l)
 }
 
 // linesInFile counts the total lines in the file.
@@ -50,15 +49,13 @@ func linesInFile(s string) string {
 	for scanner.Scan() {
 		count++
 	}
-	o := strconv.Itoa(count)
-	return o
+	return strconv.Itoa(count)
 }
 
 // charsInFile returns the character count.
 func charsInFile(s string) string {
 	l := len(s)
-	o := strconv.Itoa(l)
-	return o
+	return strconv.Itoa(l)
 }
 func main() {
 	var w, l, c bool
